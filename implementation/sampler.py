@@ -32,7 +32,7 @@ class OpenAIFunSearchLLM:
     def __init__(self, samples_per_prompt: int) -> None:
         self._samples_per_prompt = samples_per_prompt
         # 配置信息（请替换为您的有效 API 密钥和地址）
-        self.api_key = "sk-rBFScSgpK4yWXiqxTwgEROtXHFSQSMBxwEJ3ZMbhrMmOMipE"
+        self.api_key = "sk-..."
         self.host_url = "https://api.bltcy.ai"
         self.client = openai.OpenAI(
             base_url=f"{self.host_url}/v1",
