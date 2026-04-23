@@ -12,19 +12,19 @@
 
 ## 项目结构
 
-'''
-funsearch-main/implementation/
-├── main.py                    # 主入口，冷启动与进化循环
-├── funsearch.py               # FunSearch 官方入口（保留）
-├── sampler.py                 # LLM 采样器（硅基流动 Qwen3-Coder）
-├── evaluator.py               # 评估器，集成去重与沙箱调用
-├── sandbox.py                 # 安全沙箱与装箱模拟器
-├── deduplicator.py            # 多层级代码去重器
-├── code_manipulation.py       # AST 操作工具
-├── programs_database.py       # 岛屿数据库
-├── config.py                  # 配置类
-└── requirements.txt           # Python 依赖
-'''
+
++ funsearch-main/implementation/
+  + main.py                    # 主入口，冷启动与进化循环
+  + funsearch.py               # FunSearch 官方入口（保留）
+  + sampler.py                 # LLM 采样器（硅基流动 Qwen3-Coder）
+  + evaluator.py               # 评估器，集成去重与沙箱调用  
+  + sandbox.py                 # 安全沙箱与装箱模拟器
+  + deduplicator.py            # 多层级代码去重器
+  + code_manipulation.py       # AST 操作工具
+  + programs_database.py       # 岛屿数据库
+  + config.py                  # 配置类
+  + requirements.txt           # Python 依赖
+
 ## 安装
 
 1. 克隆仓库并进入实现目录：
