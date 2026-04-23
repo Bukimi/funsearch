@@ -12,7 +12,7 @@
 
 ## 项目结构
 
-
+'''
 funsearch-main/implementation/
 ├── main.py                    # 主入口，冷启动与进化循环
 ├── funsearch.py               # FunSearch 官方入口（保留）
@@ -24,9 +24,7 @@ funsearch-main/implementation/
 ├── programs_database.py       # 岛屿数据库
 ├── config.py                  # 配置类
 └── requirements.txt           # Python 依赖
-
-text
-
+'''
 ## 安装
 
 1. 克隆仓库并进入实现目录：
