@@ -1,4 +1,3 @@
-```markdown
 # Sample-Efficient FunSearch for Online Bin Packing
 
 本项目基于 DeepMind 的 **FunSearch** 框架，使用大型语言模型（LLM）自动进化在线一维装箱问题的启发式优先级函数。通过引入**语义去重缓存**和**安全沙箱评估**，实现了样本高效的搜索过程，显著减少了重复评估开销。
@@ -13,7 +12,7 @@
 
 ## 项目结构
 
-```
+
 funsearch-main/implementation/
 ├── main.py                    # 主入口，冷启动与进化循环
 ├── funsearch.py               # FunSearch 官方入口（保留）
@@ -25,7 +24,8 @@ funsearch-main/implementation/
 ├── programs_database.py       # 岛屿数据库
 ├── config.py                  # 配置类
 └── requirements.txt           # Python 依赖
-```
+
+text
 
 ## 安装
 
