@@ -1,89 +1,107 @@
-# FunSearch
+```markdown
+# Sample-Efficient FunSearch for Online Bin Packing
 
-This repository accompanies the publication
+本项目基于 DeepMind 的 **FunSearch** 框架，使用大型语言模型（LLM）自动进化在线一维装箱问题的启发式优先级函数。通过引入**语义去重缓存**和**安全沙箱评估**，实现了样本高效的搜索过程，显著减少了重复评估开销。
 
-> Romera-Paredes, B. et al. [Mathematical discoveries from program search with large language models](https://www.nature.com/articles/s41586-023-06924-6). *Nature* (2023)
+## 特性
 
-There are 6 independent directories:
+- **在线装箱模拟器**：多进程安全沙箱中模拟 `First-Fit` 变体，根据 LLM 生成的优先级函数实时决策。
+- **多层级代码去重**：基于 AST 规范化（变量重命名、交换律排序、关系符归一化）和语义微测试，识别并复用等价程序的历史得分。
+- **FunSearch 进化管道**：单线程实现，包含岛屿模型、程序数据库、LLM 采样与评估器。
+- **支持 OR-Library 数据集**：预置切换接口，可评估 20 个标准装箱实例。
+- **丰富的统计指标**：记录 AST/语义命中率、评估轮次、时间开销和平均箱数。
 
-- `cap_set` contains functions discovered by FunSearch that construct large cap
-sets, and we also provide those cap sets in a numerical format for convenience.
+## 项目结构
 
-- `admissible_set` contains functions discovered by FunSearch that construct
-large admissible sets, and we also provide those admissible sets in a numerical
-format for convenience.
-
-- `bin_packing` contains heuristics discovered by FunSearch for online 1D bin
-packing problems, and an evaluation suite to reproduce the results reported in
-the paper.
-
-- `cyclic_graphs` contains functions discovered by FunSearch that construct
-large independent sets in strong products of cyclic graphs, and we also provide
-those sets in a numerical format for convenience.
-
-- `corner_free_sets` contains the discovered sets of indices, in numerical
-format, satisfying the combinatorial degeneration constraints described for the
-corners-free problem in the Supplementary Information.
-
-- `implementation` contains an implementation of the evolutionary algorithm,
-code manipulation routines, and a single-threaded implementation of the
-FunSearch pipeline. It does not contain language models for generating new
-programs, the sandbox for executing untrusted code, nor the infrastructure for
-running FunSearch on our distributed system. This directory is intended to be
-useful for understanding the details of our method, and for adapting it for use
-with any available language models, sandboxes, and distributed systems.
-
-## Installation
-
-No installation is required. All notebooks can be opened and run in Google
-Colab.
-
-## Usage
-
-- `cap_set`: The notebook `cap_set.ipynb` can be opened via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/cap_set/cap_set.ipynb).
-
-- `admissible_set`: The notebook `admissible_set.ipynb` can be opened
-via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/admissible_set/admissible_set.ipynb).
-
-- `bin_packing`: The notebook `bin_packing.ipynb` can be opened via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/bin_packing/bin_packing.ipynb).
-
-- `cyclic_graphs`: The notebook `cyclic_graphs.ipynb` can be opened via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/cyclic_graphs/cyclic_graphs.ipynb).
-
-## Citing this work
-
-If you use the code or data in this package, please cite:
-
-```bibtex
-@Article{FunSearch2023,
-  author  = {Romera-Paredes, Bernardino and Barekatain, Mohammadamin and Novikov, Alexander and Balog, Matej and Kumar, M. Pawan and Dupont, Emilien and Ruiz, Francisco J. R. and Ellenberg, Jordan and Wang, Pengming and Fawzi, Omar and Kohli, Pushmeet and Fawzi, Alhussein},
-  journal = {Nature},
-  title   = {Mathematical discoveries from program search with large language models},
-  year    = {2023},
-  doi     = {10.1038/s41586-023-06924-6}
-}
+```
+funsearch-main/implementation/
+├── main.py                    # 主入口，冷启动与进化循环
+├── funsearch.py               # FunSearch 官方入口（保留）
+├── sampler.py                 # LLM 采样器（硅基流动 Qwen3-Coder）
+├── evaluator.py               # 评估器，集成去重与沙箱调用
+├── sandbox.py                 # 安全沙箱与装箱模拟器
+├── deduplicator.py            # 多层级代码去重器
+├── code_manipulation.py       # AST 操作工具
+├── programs_database.py       # 岛屿数据库
+├── config.py                  # 配置类
+└── requirements.txt           # Python 依赖
 ```
 
-## License and disclaimer
+## 安装
 
-Copyright 2023 DeepMind Technologies Limited
+1. 克隆仓库并进入实现目录：
+   ```bash
+   git clone <repo-url>
+   cd funsearch-main/implementation
+   ```
 
-All software is licensed under the Apache License, Version 2.0 (Apache 2.0);
-you may not use this file except in compliance with the Apache 2.0 license.
-You may obtain a copy of the Apache 2.0 license at:
-https://www.apache.org/licenses/LICENSE-2.0
+2. 创建 Python 3.10+ 虚拟环境（推荐）：
+   ```bash
+   conda create -n funsearch python=3.11
+   conda activate funsearch
+   ```
 
-All other materials are licensed under the Creative Commons Attribution 4.0
-International License (CC-BY). You may obtain a copy of the CC-BY license at:
-https://creativecommons.org/licenses/by/4.0/legalcode
+3. 安装依赖：
+   ```bash
+   pip install -r requirements.txt
+   ```
+   核心依赖：`numpy`, `openai`, `absl-py`
 
-Unless required by applicable law or agreed to in writing, all software and
-materials distributed here under the Apache 2.0 or CC-BY licenses are
-distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-either express or implied. See the licenses for the specific language governing
-permissions and limitations under those licenses.
+## 配置与运行
 
-This is not an official Google product.
+在 `main.py` 中可调整关键参数：
+
+- **LLM 设置**：`sampler.py` 中的 API 密钥、模型名称和温度。
+- **数据集**：`load_bin_packing_dataset()` 函数可加载 OR3 或自定义文件。
+- **进化参数**：`config_lib.Config` 中的岛屿数、采样数、评估超时等。
+
+启动搜索：
+```bash
+python main.py
+```
+搜索将无限进行，按 `Ctrl+C` 安全终止并输出统计结果。
+
+## 实验设置与评估指标
+
+**数据集**：OR3 标准集，20 个实例，每个容器容量 150，首例物品数 500。
+
+**指标体系**：
+
+| 指标 | 说明 | 计算公式/来源 |
+|------|------|--------------|
+| 平均使用箱数 | 在所有测试实例上装箱的平均数量 | `-average(scores_per_test)` |
+| L1 下界 | 理论最优下界（物品总体积/容量） | 需自行计算 |
+| 超出百分比 | 实际箱数相对于下界的超出比例 | `(avg_bins - L1) / L1 * 100%` |
+| AST 层级命中次数 | 仅通过 AST 规范化即命中缓存的次数 | `deduplicator.ast_hit_count` |
+| 语义层级命中次数 | AST 未命中但微测试签名匹配的次数 | `deduplicator.semantic_hit_count` |
+
+**时间性能**：
+
+- **采样耗时**：LLM 单次生成代码的耗时（可在 `sampler.py` 记录并传入评估器）。
+- **评估总耗时**：在 20 个测试实例上运行沙箱的总时间（已内置输出）。
+
+## 运行示例
+
+```
+[System] 加载 OR3 数据集完成，共 20 个实例
+✅ 初始种子代码评估成功！数据库已激活。
+[System] 初始化完成！开始执行主搜索循环...
+✅ 第 1 轮有效评估完成！
+[Deduplicator] 🎯 Level-1 命中：AST 结构完全等价！
+✅ 第 2 轮有效评估完成！
+...
+🛑 实验被手动终止。
+📊 运行统计:
+-> 去重库中总共收集了 10 个独立的启发式算法。
+-> AST 层级命中: 58 次
+-> 语义层级命中: 0 次
+-> 平均得分: -212.00
+🏁 总共完成 65 轮有效评估。
+```
+
+## 引用
+
+如果本项目对你的研究有帮助，请引用 FunSearch 原论文：
+
+> Bernardino Romera-Paredes et al. "Mathematical discoveries from program search with large language models." *Nature*, 2023.
+
